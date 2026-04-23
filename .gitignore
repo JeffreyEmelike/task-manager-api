@@ -4,7 +4,7 @@ node_modules/
 .env
 .env.local
 .env.production
-.env.example
+# .env.example
 # TypeScript build output — generated from src/, not source code
 dist/
 build/
