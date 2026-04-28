@@ -42,3 +42,27 @@ export const getWorkspaces = async (
     next(error);
   }
 };
+
+// GET /api/workspaces/:id - get a single workspace
+export const getWorkspace = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const workspace = await Workspace.findById(req.params.id).populate(
+      "members.user",
+      "name email",
+    );
+
+    if (!workspace) {
+      res.status(404).json({
+        message: "Not found",
+      });
+      return;
+    }
+    res.json(workspace);
+  } catch (error) {
+    next(error);
+  }
+};
