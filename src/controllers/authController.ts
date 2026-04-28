@@ -102,3 +102,35 @@ export const refreshToken = async (
     next(error);
   }
 };
+
+// POST /api/auth/logout
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      res.status(400).json({ message: "No refresh token provided" });
+      return;
+    }
+
+    // Find the user who owns this token
+    const user = await User.findOne({ refreshTokens: refreshToken });
+
+    if (!user) {
+      res.status(200).json({ message: "Logged out" });
+
+      return;
+    }
+    // Remove this specific token from the array
+    user.refreshTokens = user.refreshTokens.filter((t) => t !== refreshToken);
+    await user.save();
+
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
