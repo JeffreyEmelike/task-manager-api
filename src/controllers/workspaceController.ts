@@ -66,3 +66,26 @@ export const getWorkspace = async (
     next(error);
   }
 };
+
+// PATCH /api/workspaces/:id - update workspace name
+export const updateWorkspace = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const workspace = await Workspace.findByIdAndUpdate(
+      req.params.id,
+      { name: req.body.name },
+      { new: true },
+    );
+
+    if (!workspace) {
+      res.status(404).json({ message: "Not found" });
+      return;
+    }
+    res.json(workspace);
+  } catch (error) {
+    next(error);
+  }
+};
