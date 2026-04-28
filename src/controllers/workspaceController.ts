@@ -26,3 +26,19 @@ export const createWorkspace = async (
     next(error);
   }
 };
+
+// GET /api/workspaces - list all workspaces the user belongs to
+export const getWorkspaces = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const workspaces = await Workspace.find({
+      "members.user": req.user!._id,
+    }).populate("owner", "name email");
+    res.json(workspaces);
+  } catch (error) {
+    next(error);
+  }
+};
