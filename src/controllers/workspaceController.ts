@@ -89,3 +89,17 @@ export const updateWorkspace = async (
     next(error);
   }
 };
+
+// DELETE /api/workspaces/:id - delete a workspace
+export const deleteWorkspace = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    await Workspace.findByIdAndDelete(req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
