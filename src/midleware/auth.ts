@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import { Types } from "mongoose";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/User";
+import Workspace from "../models/Workspace";
 
 declare global {
   namespace Express {
@@ -45,13 +47,45 @@ export const authentication = async (
 // Middleware 2 - enforce role restrictions
 export const authorize =
   (...roles: IUser["role"][]) =>
-  (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.user || !roles.includes(req.user.role)) {
-      res.status(403).json({ message: "Forbidden - insufficient role" });
-      return;
-    }
-    next();
-  };
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (!req.user) {
+        res.status(403).json({ message: "Forbidden" });
+        return;
+      }
 
-// Usage expample in a route file:
-// router.delete('/:id', )
+      // Get workspace ID from URL params — works for:
+      // /api/workspaces/:id  and  /api/workspaces/:wid/projects
+      const workspaceId = req.params.id || req.params.wid;
+
+      if (!workspaceId) {
+        // No workspace in the URL — fall back to global user role
+        if (!roles.includes(req.user.role)) {
+          res.status(403).json({ message: "Forbidden - insufficient role" });
+          return;
+        }
+        next();
+        return;
+      }
+      // Find the workspace and look up this user's membership role
+      const workspace = await Workspace.findById(workspaceId);
+      if (!workspace) {
+        res.status(404).json({ message: "Workspace not found" });
+        return;
+      }
+
+      const membership = workspace.members.find(
+        (m: { user: Types.ObjectId | string; role: IUser["role"] }) =>
+          m.user.toString() === req.user!._id.toString(),
+      );
+
+      if (!membership || !roles.includes(membership.role)) {
+        res.status(403).json({ message: "Forbidden - insufficient role" });
+        return;
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
