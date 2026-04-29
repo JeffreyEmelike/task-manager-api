@@ -103,3 +103,45 @@ export const deleteWorkspace = async (
     next(error);
   }
 };
+
+// POST /api/workspaces/:id/invite - invite a member to a workspace
+export const inviteMember = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { email, role = "member" } = req.body;
+
+    // Find the user being invited
+    const invitee = await User.findOne({ email });
+
+    if (!invitee) {
+      res.status(404).json({ message: "No user with this email" });
+      return;
+    }
+
+    const workspace = await Workspace.findById(req.params.id);
+    if (!workspace) {
+      res.status(404).json({ message: "Workspace not found" });
+      return;
+    }
+
+    // Check if already a member
+    const alreadyMember = workspace.members.some(
+      (m) => m.user.toString() === invitee._id.toString(),
+    );
+    if (alreadyMember) {
+      res.status(409).json({ message: "User is already a member" });
+      return;
+    }
+
+    // Add the new member
+    workspace.members.push({ user: invitee._id, role });
+    await workspace.save();
+
+    res.json({ message: `${invitee.name} added to workspace` });
+  } catch (error) {
+    next(error);
+  }
+};

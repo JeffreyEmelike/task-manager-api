@@ -1,6 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import authRoutes from "./routes/auth";
+import WorkspaceRoutes from "./routes/workspaces";
 
 const app = express();
 
@@ -21,5 +22,7 @@ app.use(
     res.status(500).json({ message: err.message || "Internal server error" });
   },
 );
+
+app.use("/api/workspaces", WorkspaceRoutes);
 
 export default app;
