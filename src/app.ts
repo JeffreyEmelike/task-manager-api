@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import authRoutes from "./routes/auth";
 import WorkspaceRoutes from "./routes/workspaces";
+import projectRoutes from "./routes/projects";
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use(
 );
 
 app.use("/api/workspaces", WorkspaceRoutes);
-
+app.use("/api/workspaces/:wid/projects", projectRoutes);
+app.use("/api/projects", projectRoutes);
 export default app;
