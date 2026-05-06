@@ -5,7 +5,7 @@ import {
   updateProject,
   deleteProject,
 } from "../controllers/projectController";
-import { authentication } from "@/midleware/auth";
+import { authentication } from "../midleware/auth";
 
 const router = Router({ mergeParams: true });
 

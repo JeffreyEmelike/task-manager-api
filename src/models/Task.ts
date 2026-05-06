@@ -7,6 +7,12 @@ interface ISubtask {
   done: boolean;
 }
 
+interface IComment {
+  author: Types.ObjectId;
+  body: string;
+  createdAt: Date;
+}
+
 export interface ITask extends Document {
   title: string;
   description?: string;
@@ -23,6 +29,8 @@ export interface ITask extends Document {
 
   createdAt: Date;
   updatedAt: Date;
+
+  comments: IComment[];
 }
 
 // Sub-document schema
@@ -33,6 +41,15 @@ const SubtaskSchema = new Schema<ISubtask>(
   },
   { _id: false },
 ); // no auto-id on sub-documents
+
+const CommentSchema = new Schema<IComment>(
+  {
+    author: { type: Schema.Types.ObjectId, ref: "User", requires: true },
+    body: { type: String, required: true, trim: true },
+    createdAt: { type: Date, default: Date.now },
+  },
+  { _id: true },
+);
 
 const TaskSchema = new Schema<ITask>(
   {
@@ -55,6 +72,8 @@ const TaskSchema = new Schema<ITask>(
     dueDate: { type: Date },
     embeddings: [{ type: Number }],
     aiTags: [{ type: String }],
+
+    comments: [CommentSchema],
   },
   { timestamps: true },
 );
