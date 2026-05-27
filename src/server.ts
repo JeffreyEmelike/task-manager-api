@@ -2,6 +2,7 @@ import http from "http";
 import app from "./app";
 import { connectDB } from "./config/db";
 import { initSockets } from "./sockets";
+import "./jobs/emailQueue";
 
 const PORT = process.env.PORT || 3000;
 

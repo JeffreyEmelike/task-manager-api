@@ -4,6 +4,7 @@ import { Types } from "mongoose";
 import Task from "../models/Task";
 import Activity from "../models/ActivityLog";
 import { NextFunction, Request, Response } from "express";
+import { emailQueue } from "../jobs/emailQueue";
 
 // Get all tasks in a project
 export const getTasks = async (
