@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth";
 import WorkspaceRoutes from "./routes/workspaces";
 import projectRoutes from "./routes/projects";
 import taskRoutes from "./routes/tasks";
+import searchRoutes from "./routes/search";
 
 const app = express();
 
@@ -32,4 +33,6 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/projects/:pid/tasks", taskRoutes);
 // Direct — for getting, updating, deleting a single task by its own ID
 app.use("/api/tasks", taskRoutes);
+app.use("/api/search", searchRoutes);
+
 export default app;
