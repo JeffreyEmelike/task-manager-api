@@ -8,6 +8,7 @@ import {
   addComment,
 } from "../controllers/taskController";
 import { authentication } from "../midleware/auth";
+import { upload, attachFile } from "../controllers/uploadController";
 
 const router = Router({ mergeParams: true });
 
@@ -19,6 +20,7 @@ router.post("/", createTask); // POST   /api/projects/:pid/tasks
 router.get("/:id", getTask); // GET    /api/tasks/:id
 router.patch("/:id", updateTask); // PATCH  /api/tasks/:id
 router.delete("/:id", deleteTask); // DELETE /api/tasks/:id
+router.post("/:id?attachments", upload.single("file"), attachFile);
 
 // Comments
 router.post("/:id/comments", addComment);
