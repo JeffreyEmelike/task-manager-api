@@ -8,6 +8,7 @@ import {
   inviteMember,
 } from "../controllers/workspaceController";
 import { authentication, authorize } from "../midleware/auth";
+import { getWorkspaceAnalytics } from "../controllers/analyticsController";
 
 const router = Router();
 
@@ -17,6 +18,8 @@ router.use(authentication);
 router.get("/", getWorkspaces);
 router.post("/", createWorkspace);
 router.get("/:id", getWorkspace);
+
+router.get("/:id/analytics", getWorkspaceAnalytics);
 
 // Update and delete require admin roles
 router.patch("/:id", authorize("admin"), updateWorkspace);
