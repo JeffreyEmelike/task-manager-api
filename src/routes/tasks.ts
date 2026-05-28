@@ -7,7 +7,7 @@ import {
   deleteTask,
   addComment,
 } from "../controllers/taskController";
-import { authentication } from "../midleware/auth";
+import { authentication } from "../middleware/auth";
 import { upload, attachFile } from "../controllers/uploadController";
 import { autoTag, recommend } from "../controllers/aiController";
 
