@@ -7,7 +7,7 @@ import {
   deleteWorkspace,
   inviteMember,
 } from "../controllers/workspaceController";
-import { authentication, authorize } from "../midleware/auth";
+import { authentication, authorize } from "../middleware/auth";
 import { getWorkspaceAnalytics } from "../controllers/analyticsController";
 
 const router = Router();
