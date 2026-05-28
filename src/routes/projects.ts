@@ -14,6 +14,6 @@ router.use(authentication);
 router.get("/", getProjects);
 router.post("/", createProject);
 router.patch("/", updateProject);
-router.patch("/", deleteProject);
+router.delete("/", deleteProject);
 
 export default router;

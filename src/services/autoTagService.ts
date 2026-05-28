@@ -19,7 +19,7 @@ export const generateTags = async (taskId: string): Promise<string[]> => {
    `;
 
   const message = await client.messages.create({
-    model: "claude-sonnet-4-20230514",
+    model: "claude-sonnet-4-20250514",
     max_tokens: 128,
     messages: [{ role: "user", content: prompt }],
   });

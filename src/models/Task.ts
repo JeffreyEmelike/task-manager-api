@@ -24,7 +24,7 @@ export interface ITask extends Document {
   subtasks: ISubtask[];
   attachments: string[]; // array of URLs
   dueDate?: Date;
-  embeddings?: number[]; // vector for AI search
+  embedding: number[]; // vector for AI search
   aiTags?: string[];
 
   createdAt: Date;
@@ -44,7 +44,7 @@ const SubtaskSchema = new Schema<ISubtask>(
 
 const CommentSchema = new Schema<IComment>(
   {
-    author: { type: Schema.Types.ObjectId, ref: "User", requires: true },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     body: { type: String, required: true, trim: true },
     createdAt: { type: Date, default: Date.now },
   },
@@ -70,7 +70,7 @@ const TaskSchema = new Schema<ITask>(
     subtasks: [SubtaskSchema],
     attachments: [{ type: String }],
     dueDate: { type: Date },
-    embeddings: [{ type: Number }],
+    embedding: [{ type: Number }],
     aiTags: [{ type: String }],
 
     comments: [CommentSchema],

@@ -18,7 +18,11 @@ export const search = async (
     const limit = parseInt(req.query.limit as string) || 10;
 
     // semanticSearch expects a string for the limit parameter, so convert here
-    const results = await semanticSearch(query, String(limit));
+    const results = await semanticSearch(
+      query,
+      req.user!.workspaces[0]?.toString() ?? "",
+      limit,
+    );
 
     res.json({
       query,

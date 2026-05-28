@@ -34,8 +34,9 @@ const UserSchema = new Schema<IUser>(
 
 //3 Hash password before saving
 UserSchema.pre("save", async function (next) {
-  if (!this.isModified("passwordHash")) return;
+  if (!this.isModified("passwordHash")) return next();
   this.passwordHash = await bcrypt.hash(this.passwordHash, 12);
+  next();
 });
 
 //4. Instance method - compare plainText with hashed
