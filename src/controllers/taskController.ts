@@ -5,6 +5,7 @@ import Task from "../models/Task";
 import Activity from "../models/ActivityLog";
 import { NextFunction, Request, Response } from "express";
 import { emailQueue } from "../jobs/emailQueue";
+import { logActivity } from "../services/activityService";
 
 // Get all tasks in a project
 export const getTasks = async (
@@ -50,6 +51,7 @@ export const getTask = async (
       res.status(404).json({ message: "Task not found " });
       return;
     }
+    res.json(task);
   } catch (error) {
     next(error);
   }
@@ -186,18 +188,18 @@ export const addComment = async (
     next(error);
   }
 };
-async function logActivity({
-  workspace,
-  actor,
-  entity,
-  entityId,
-  action,
-}: {
-  workspace: any;
-  actor: Types.ObjectId;
-  entity: string;
-  entityId: string;
-  action: string;
-}) {
-  await Activity.create({ workspace, actor, entity, entityId, action });
-}
+// async function logActivity({
+//   workspace,
+//   actor,
+//   entity,
+//   entityId,
+//   action,
+// }: {
+//   workspace: any;
+//   actor: Types.ObjectId;
+//   entity: string;
+//   entityId: string;
+//   action: string;
+// }) {
+//   await Activity.create({ workspace, actor, entity, entityId, action });
+// }

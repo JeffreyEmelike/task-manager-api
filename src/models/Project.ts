@@ -17,7 +17,12 @@ const ProjectSchema = new Schema<IProject>(
   {
     title: { type: String, required: true, trim: true },
     description: { type: String },
-    workspace: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    workspace: {
+      type: Schema.Types.ObjectId,
+      ref: "Workspace",
+      required: true,
+    },
+    owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
     status: {
       type: String,
       enum: ["active", "archived", "completed"],

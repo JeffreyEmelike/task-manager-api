@@ -13,6 +13,15 @@ app.use(express.json()); // parse JSON request bodies
 // Mount routes - all auth routes live under /api/auth
 app.use("/api/auth", authRoutes);
 
+app.use("/api/workspaces", WorkspaceRoutes);
+app.use("/api/workspaces/:wid/projects", projectRoutes);
+app.use("/api/projects", projectRoutes);
+// Nested — for creating and listing tasks under a project
+app.use("/api/projects/:pid/tasks", taskRoutes);
+// Direct — for getting, updating, deleting a single task by its own ID
+app.use("/api/tasks", taskRoutes);
+app.use("/api/search", searchRoutes);
+
 // Global error handler - catches anything pass to next(error)
 app.use(
   (
@@ -25,14 +34,4 @@ app.use(
     res.status(500).json({ message: err.message || "Internal server error" });
   },
 );
-
-app.use("/api/workspaces", WorkspaceRoutes);
-app.use("/api/workspaces/:wid/projects", projectRoutes);
-app.use("/api/projects", projectRoutes);
-// Nested — for creating and listing tasks under a project
-app.use("/api/projects/:pid/tasks", taskRoutes);
-// Direct — for getting, updating, deleting a single task by its own ID
-app.use("/api/tasks", taskRoutes);
-app.use("/api/search", searchRoutes);
-
 export default app;

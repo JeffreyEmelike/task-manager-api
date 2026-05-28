@@ -29,7 +29,7 @@ const MemberSchema = new Schema<IWorkspaceMember>(
 
 const WorkspaceSchema = new Schema<IWorkspace>(
   {
-    name: { type: String, rewuired: true, trim: true },
+    name: { type: String, required: true, trim: true },
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
     members: [MemberSchema],
     inviteTokens: [{ type: String }],
@@ -37,7 +37,6 @@ const WorkspaceSchema = new Schema<IWorkspace>(
   { timestamps: true },
 );
 
-WorkspaceSchema.index;
-({ owner: 1 });
+WorkspaceSchema.index({ owner: 1 });
 
 export default mongoose.model<IWorkspace>("Workspace", WorkspaceSchema);
