@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import Task, { ITask } from "../models/Task";
+import Task from "../models/Task";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -27,7 +27,7 @@ export const generateTags = async (taskId: string): Promise<string[]> => {
   // Extract the text from the response
   const text = message.content
     .filter((b) => b.type === "text")
-    .map((b) => b.text)
+    .map((b) => (b as { type: "text"; text: string }).text)
     .join("");
 
   // Parse and validate the response

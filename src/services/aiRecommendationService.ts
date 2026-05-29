@@ -1,6 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import Task, { ITask } from "../models/Task";
-import User from "../models/User";
+import Task from "../models/Task";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
