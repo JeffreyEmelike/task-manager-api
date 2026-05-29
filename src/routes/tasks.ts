@@ -24,7 +24,7 @@ router.delete("/:id", deleteTask); // DELETE /api/tasks/:id
 router.post("/:id/attachments", upload.single("file"), attachFile);
 
 router.post("/:id/autotag", autoTag);
-router.post("/:id/recommend", recommend);
+router.get("/:id/recommend", recommend);
 
 // Comments
 router.post("/:id/comments", addComment);

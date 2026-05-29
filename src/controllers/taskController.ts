@@ -1,10 +1,7 @@
 // In a task controller, emit after every change
 
-import { Types } from "mongoose";
 import Task from "../models/Task";
-import Activity from "../models/ActivityLog";
 import { NextFunction, Request, Response } from "express";
-import { emailQueue } from "../jobs/emailQueue";
 import { logActivity } from "../services/activityService";
 
 // Get all tasks in a project
@@ -100,13 +97,14 @@ export const updateTask = async (
       actor: req.user!._id,
       entity: "task",
       entityId: task._id.toString(),
-      action: "created",
+      action: "updated",
     });
 
     // Emit to everyone in the workspace room
     const io = req.app.locals.io;
-    io.to(task.project.toString()).emit("task:updated", task);
-
+    if (io) {
+      io.to(task.project.toString()).emit("task:updated", task);
+    }
     res.json(task);
   } catch (error) {
     next(error);
@@ -179,10 +177,12 @@ export const addComment = async (
 
     // Emit real time event
     const io = req.app.locals.io;
-    io.to(task.project.toString()).emit("task:commented", {
-      taskId: task._id,
-      comment: task.comments[task.comments.length - 1],
-    });
+    if (io) {
+      io.to(task.project.toString()).emit("task:commented", {
+        taskId: task._id,
+        comment: task.comments[task.comments.length - 1],
+      });
+    }
     res.status(201).json(task);
   } catch (error) {
     next(error);

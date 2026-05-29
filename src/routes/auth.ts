@@ -5,12 +5,13 @@ import {
   refreshToken,
   logout,
 } from "../controllers/authController";
+import { authentication } from "@/middleware/auth";
 
 const router = Router();
 
 router.post("/register", register);
 router.post("/login", login);
 router.post("/refresh", refreshToken);
-router.post("/logout", logout);
+router.post("/logout", authentication, logout);
 
 export default router;
