@@ -52,7 +52,7 @@ export const updateProject = async (
       new: true,
     });
     if (!project) {
-      res.status(404).json({ message: "Not  found" });
+      res.status(404).json({ message: "Not found" });
       return;
     }
     res.json(project);
