@@ -188,18 +188,3 @@ export const addComment = async (
     next(error);
   }
 };
-// async function logActivity({
-//   workspace,
-//   actor,
-//   entity,
-//   entityId,
-//   action,
-// }: {
-//   workspace: any;
-//   actor: Types.ObjectId;
-//   entity: string;
-//   entityId: string;
-//   action: string;
-// }) {
-//   await Activity.create({ workspace, actor, entity, entityId, action });
-// }
