@@ -1,5 +1,6 @@
 // In a task controller, emit after every change
 
+import { generateEmbedding } from "../services/embeddingService";
 import Task from "../models/Task";
 import { NextFunction, Request, Response } from "express";
 import { logActivity } from "../services/activityService";
@@ -65,6 +66,11 @@ export const createTask = async (
       ...req.body,
       project: req.params.pid,
     });
+
+    // Generate embedding for AI search
+    const text = `${task.title} ${task.description ?? ""}`.trim();
+    task.embedding = await generateEmbedding(text);
+    await task.save();
 
     // Emit real-time event to all clients in this project's room
     const io = req.app.locals.io;
