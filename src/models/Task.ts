@@ -8,7 +8,7 @@ interface ISubtask {
 }
 
 interface IComment {
-  _id: Types.ObjectId;
+  _id?: Types.ObjectId;
   author: Types.ObjectId;
   body: string;
   createdAt: Date;
