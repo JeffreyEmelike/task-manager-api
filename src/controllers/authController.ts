@@ -79,10 +79,21 @@ export const refreshToken = async (
       return;
     }
 
-    const payload = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET!,
-    ) as { userId: string };
+    // const payload = jwt.verify(
+    //   refreshToken,
+    //   process.env.JWT_REFRESH_SECRET!,
+    // ) as { userId: string };
+
+    let payload;
+
+    try {
+      payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as {
+        userId: string;
+      };
+    } catch (err) {
+      res.status(401).json({ message: "Invalid refresh token " });
+      return;
+    }
 
     const user = await User.findById(payload.userId);
     if (!user || !user.refreshTokens.includes(refreshToken)) {

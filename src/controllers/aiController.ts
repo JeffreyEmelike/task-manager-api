@@ -10,7 +10,9 @@ export const autoTag = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const taskId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const taskId = Array.isArray(req.params.id)
+      ? req.params.id[0]
+      : req.params.id;
     const tags = await generateTags(taskId);
 
     // save the tags to the task
@@ -37,7 +39,18 @@ export const recommend = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const taskId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const taskId = Array.isArray(req.params.id)
+      ? req.params.id[0]
+      : req.params.id;
+
+    // check if task exists
+    const task = await Task.findById(taskId);
+    if (!task) {
+      res.status(404).json({ message: "Task not found" });
+      return;
+    }
+
+    // run the ai
     const recommendation = await recommendForTask(taskId);
     res.json(recommendation);
   } catch (error) {
