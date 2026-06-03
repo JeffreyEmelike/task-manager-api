@@ -19,7 +19,7 @@ export const autoTag = async (
     const task = await Task.findByIdAndUpdate(
       taskId,
       { aiTags: tags },
-      { new: true },
+      { returnDocument: "after" },
     );
     if (!task) {
       res.status(404).json({ message: "Task not found" });

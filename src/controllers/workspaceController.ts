@@ -77,7 +77,7 @@ export const updateWorkspace = async (
     const workspace = await Workspace.findByIdAndUpdate(
       req.params.id,
       { name: req.body.name },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     if (!workspace) {
