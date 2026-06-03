@@ -1,5 +1,8 @@
 import express from "express";
 import "dotenv/config";
+import helmet from "helmet"; // security headers
+import rateLimit from "express-rate-limit"; // rate limiting
+import mongoSanitize from "express-mongo-sanitize"; // NoSQL injection prevention
 import authRoutes from "./routes/auth";
 import WorkspaceRoutes from "./routes/workspaces";
 import projectRoutes from "./routes/projects";
@@ -8,7 +11,24 @@ import searchRoutes from "./routes/search";
 
 const app = express();
 
+// Security middleware
+app.use(helmet());
+
+app.use(mongoSanitize());
+
+// Body parsing
 app.use(express.json()); // parse JSON request bodies
+
+// Rate limmiting on auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many attempts, please try again later" },
+});
+
+app.use("/api/auth", authLimiter);
 
 // Mount routes - all auth routes live under /api/auth
 app.use("/api/auth", authRoutes);
