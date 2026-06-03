@@ -90,7 +90,7 @@ export const updateTask = async (
 ): Promise<void> => {
   try {
     const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      returnDocument: "after",
     });
     if (!task) {
       res.status(404).json({ message: "Task not found" });

@@ -28,7 +28,7 @@ export const attachFile = async (
     const task = await Task.findByIdAndUpdate(
       req.params.id,
       { $push: { attachments: url } },
-      { new: true },
+      { returnDocument: "after" },
     );
     if (!task) {
       res.status(404).json({ message: "Task not found" });
