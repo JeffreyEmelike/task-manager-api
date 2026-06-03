@@ -49,7 +49,7 @@ export const login = async (
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).exec();
     if (!user || !(await user.comparePassword(password))) {
       res.status(401).json({ message: "Invalid credentials" });
       return;
@@ -95,7 +95,7 @@ export const refreshToken = async (
       return;
     }
 
-    const user = await User.findById(payload.userId);
+    const user = await User.findById(payload.userId).exec();
     if (!user || !user.refreshTokens.includes(refreshToken)) {
       res.status(401).json({ message: "Token revoked" });
       return;

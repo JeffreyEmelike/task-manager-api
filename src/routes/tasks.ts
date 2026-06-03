@@ -11,23 +11,31 @@ import { authentication } from "../middleware/auth";
 import { upload, attachFile } from "../controllers/uploadController";
 import { autoTag, recommend } from "../controllers/aiController";
 
+import { validate } from "../middleware/validate";
+import {
+  createTaskSchema,
+  updateTaskSchema,
+  addCommentSchema,
+} from "../schemas/taskSchemas";
+
 const router = Router({ mergeParams: true });
 
 router.use(authentication);
 
 // Task CRUD
 router.get("/", getTasks); // GET    /api/projects/:pid/tasks
-router.post("/", createTask); // POST   /api/projects/:pid/tasks
+router.post("/", validate(createTaskSchema), createTask);
 router.get("/:id", getTask); // GET    /api/tasks/:id
-router.patch("/:id", updateTask); // PATCH  /api/tasks/:id
+router.patch("/:id", validate(updateTaskSchema), updateTask); // PATCH  /api/tasks/:id
 router.delete("/:id", deleteTask); // DELETE /api/tasks/:id
 router.post("/:id/attachments", upload.single("file"), attachFile);
 
+// AI features
 router.post("/:id/autotag", autoTag);
 router.get("/:id/recommend", recommend);
 
 // Comments
-router.post("/:id/comments", addComment);
+router.post("/:id/comments", validate(addCommentSchema), addComment);
 // POST /api/tasks/:id/comments
 
 export default router;

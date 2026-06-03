@@ -9,22 +9,46 @@ import {
 } from "../controllers/workspaceController";
 import { authentication, authorize } from "../middleware/auth";
 import { getWorkspaceAnalytics } from "../controllers/analyticsController";
+import { validate } from "../middleware/validate";
+import {
+  createWorkspaceSchema,
+  updateWorkspaceSchema,
+  inviteSchema,
+} from "../schemas/workspaceSchemas";
 
 const router = Router();
 
 // ALl workspace routes require a logged in user
 router.use(authentication);
 
+// Create workspace
+router.post("/", validate(createWorkspaceSchema), createWorkspace);
+
+// Get all workspaces
 router.get("/", getWorkspaces);
-router.post("/", createWorkspace);
+
+// Get a single workspace
 router.get("/:id", getWorkspace);
 
-router.get("/:id/analytics", getWorkspaceAnalytics);
+// update a workspace (admin only)
+router.patch(
+  "/:id",
+  authorize("admin"),
+  validate(updateWorkspaceSchema),
+  updateWorkspace,
+);
 
-// Update and delete require admin roles
-router.patch("/:id", authorize("admin"), updateWorkspace);
+// delete requires admin roles
 router.delete("/:id", authorize("admin"), deleteWorkspace);
 
-router.post("/:id/invite", authorize("admin"), inviteMember);
+// Invite member (admin only)
+router.post(
+  "/:id/invite",
+  authorize("admin"),
+  validate(inviteSchema),
+  inviteMember,
+);
+
+router.get("/:id/analytics", getWorkspaceAnalytics);
 
 export default router;

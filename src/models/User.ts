@@ -9,7 +9,6 @@ export interface IUser extends Document {
   role: "admin" | "member" | "guest";
   workspaces: Types.ObjectId[];
   refreshTokens: string[];
-  createdAt: Date;
 
   //Instance method - we'll add this to the schema
   comparePassword(candidate: string): Promise<boolean>;
@@ -27,7 +26,7 @@ const UserSchema = new Schema<IUser>(
       default: "member",
     },
     workspaces: [{ type: Schema.Types.ObjectId, ref: "Workspace" }],
-    refreshTokens: [{ type: String }],
+    refreshTokens: { type: [String], default: [] },
   },
   { timestamps: true },
 );
@@ -45,4 +44,7 @@ UserSchema.methods.comparePassword = async function (
   return bcrypt.compare(candidate, this.passwordHash);
 };
 
-export default mongoose.model<IUser>("User", UserSchema);
+export default mongoose.model<IUser>(
+  "User",
+  UserSchema,
+) as mongoose.Model<IUser>;
