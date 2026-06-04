@@ -67,7 +67,7 @@ export const login = async (
 };
 
 //POST /api/auth/refresh
-export const refreshToken = async (
+export const refreshTokens = async (
   req: Request,
   res: Response,
   next: NextFunction,

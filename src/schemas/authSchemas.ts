@@ -1,4 +1,3 @@
-import { refreshToken } from "@/controllers/authController";
 import { z } from "zod";
 
 export const registerSchema = z.object({
