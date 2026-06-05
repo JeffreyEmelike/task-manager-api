@@ -40,7 +40,7 @@ describe("POST /api/workspaces/:wid/projects", () => {
       .set("Authorization", bearer(token))
       .send({ description: "No title" });
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
   });
 
   it("returns 401 without a token", async () => {

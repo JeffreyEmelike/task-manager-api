@@ -53,7 +53,7 @@ describe("POST /api/workspaces", () => {
       .set("Authorization", bearer(adminToken))
       .send({});
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
   });
 });
 

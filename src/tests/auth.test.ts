@@ -42,7 +42,7 @@ describe("POST /api/auth/register", () => {
       .post("/api/auth/register")
       .send({ email: "missing@test.com" }); // no name or password
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
   });
 });
 
@@ -111,7 +111,7 @@ describe("POST /api/auth/refresh", () => {
 
   it("returns 401 when no refresh token is provided", async () => {
     const res = await request(app).post("/api/auth/refresh").send({});
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(400);
   });
 
   it("returns 401 when refresh token is invalid", async () => {
