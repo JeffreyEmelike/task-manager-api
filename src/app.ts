@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config";
 import helmet from "helmet"; // security headers
 import rateLimit from "express-rate-limit"; // rate limiting
-import mongoSanitize from "express-mongo-sanitize"; // NoSQL injection prevention
+import { mongoSanitize } from "./middleware/sanitize";
 import authRoutes from "./routes/auth";
 import WorkspaceRoutes from "./routes/workspaces";
 import projectRoutes from "./routes/projects";
@@ -14,7 +14,7 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
-app.use(mongoSanitize({ replaceWith: "_" }));
+app.use(mongoSanitize);
 
 // Body parsing
 app.use(express.json()); // parse JSON request bodies
