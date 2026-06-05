@@ -42,7 +42,7 @@ describe("POST /api/auth/register", () => {
       .post("/api/auth/register")
       .send({ email: "missing@test.com" }); // no name or password
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
   });
 });
 
