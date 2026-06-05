@@ -1,0 +1,256 @@
+PS C:\Users\HP\Desktop\task-manager-api> npm run test
+
+> task-manager-api@1.0.0 test
+> jest --forceExit --detectOpenHandles
+
+ FAIL  src/tests/workspaces.test.ts (28.616 s)
+  POST /api/workspaces
+    √ creates a workspace and returns 201 (1226 ms)
+    √ returns 401 without a token (55 ms)
+    × returns 500 when name is missing (377 ms)
+  GET /api/workspaces
+    √ returns the list of workspaces for the authenticated user (686 ms)
+    √ returns 401 without a token (63 ms)
+  GET /api/workspaces/:id
+    √ returns the workspace by ID (739 ms)
+    √ returns 404 for a non-existent workspace ID (372 ms)
+  POST /api/workspaces/:id/invite
+    √ admin can invite a user by email (1066 ms)
+    √ returns 409 when user is already a member (861 ms)
+    √ returns 404 when inviting a non-existent email (757 ms)
+    √ returns 403 when a member tries to invite (472 ms)
+  PATCH /api/workspaces/:id
+    √ admin can update the workspace name (1487 ms)
+    √ returns 403 when a member tries to update (469 ms)
+  GET /api/workspaces/:id/analytics
+    √ returns analytics object with byStatus, overdue and byAssignee (1484 ms)
+  DELETE /api/workspaces/:id
+    √ returns 403 when a member tries to delete (400 ms)
+    √ admin can delete the workspace and returns 204 (610 ms)
+    √ returns 404 after deleting a workspace (389 ms)
+
+  ● POST /api/workspaces › returns 500 when name is missing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 500
+    Received: 400
+
+      54 |       .send({});
+      55 |
+    > 56 |     expect(res.status).toBe(500);
+         |                        ^
+      57 |   });
+      58 | });
+      59 |
+
+      at Object.<anonymous> (src/tests/workspaces.test.ts:56:24)
+
+ FAIL  src/tests/tasks.test.ts (23.584 s)
+  POST /api/projects/:pid/tasks
+    √ creates a task and returns 201 (1326 ms)
+    × returns 500 when title is missing (527 ms)
+    √ returns 401 without a token (70 ms)
+    √ defaults status to todo and priority to medium (1054 ms)
+  GET /api/projects/:pid/tasks
+    √ returns all tasks in the project (1145 ms)
+    √ filters tasks by status (705 ms)
+    √ filters tasks by priority (609 ms)
+    √ returns 401 without a token (66 ms)
+  GET /api/tasks/:id
+    √ returns a single task by ID (469 ms)
+    √ returns 404 for a non-existent task (570 ms)
+    √ returns 401 without a token (63 ms)
+  PATCH /api/tasks/:id
+    × updates the task status (686 ms)
+    × updates the task priority (587 ms)
+    × updates the task title (2048 ms)
+    √ returns 404 for a non-existent task (542 ms)
+    √ returns 401 without a token (69 ms)
+  POST /api/tasks/:id/comments
+    √ adds a comment to a task and returns 201 (1035 ms)
+    √ adds a second comment — both are present (867 ms)
+    √ returns 400 when comment body is empty (262 ms)
+    √ returns 400 when body field is missing (364 ms)
+    √ returns 401 without a token (86 ms)
+  DELETE /api/tasks/:id
+    √ deletes the task and returns 204 (720 ms)
+    √ returns 404 when getting the deleted task (457 ms)
+    √ returns 404 when deleting an already-deleted task (462 ms)
+
+  ● POST /api/projects/:pid/tasks › returns 500 when title is missing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 500
+    Received: 400
+
+      57 |       .send({ priority: "low", workspace: workspaceId });
+      58 |
+    > 59 |     expect(res.status).toBe(500);
+         |                        ^
+      60 |   });
+      61 |
+      62 |   it("returns 401 without a token", async () => {
+
+      at Object.<anonymous> (src/tests/tasks.test.ts:59:24)
+
+  ● PATCH /api/tasks/:id › updates the task status
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      155 |       .send({ status: "in-progress", workspace: workspaceId });
+      156 |
+    > 157 |     expect(res.status).toBe(200);
+          |                        ^
+      158 |     expect(res.body.status).toBe("in-progress");
+      159 |   });
+      160 |
+
+      at Object.<anonymous> (src/tests/tasks.test.ts:157:24)
+
+  ● PATCH /api/tasks/:id › updates the task priority
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      165 |       .send({ priority: "critical", workspace: workspaceId });
+      166 |
+    > 167 |     expect(res.status).toBe(200);
+          |                        ^
+      168 |     expect(res.body.priority).toBe("critical");
+      169 |   });
+      170 |
+
+      at Object.<anonymous> (src/tests/tasks.test.ts:167:24)
+
+  ● PATCH /api/tasks/:id › updates the task title
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      175 |       .send({ title: "Fix login bug — updated", workspace: workspaceId });
+      176 |
+    > 177 |     expect(res.status).toBe(200);
+          |                        ^
+      178 |     expect(res.body.title).toBe("Fix login bug — updated");
+      179 |   });
+      180 |
+
+      at Object.<anonymous> (src/tests/tasks.test.ts:177:24)
+
+ PASS  src/tests/ai.test.ts (14.136 s)
+  GET /api/search
+    √ returns search results for a valid query (306 ms)
+    √ returns 400 when query param is missing (280 ms)
+    √ returns 400 when query is only whitespace (299 ms)
+    √ returns 401 without a token (64 ms)
+    √ respects the limit query param (234 ms)
+  POST /api/tasks/:id/autotag
+    √ generates and saves tags to the task (635 ms)
+    √ returns 404 for a non-existent task ID (376 ms)
+    √ returns 401 without a token (57 ms)
+  GET /api/tasks/:id/recommend
+    √ returns a priority recommendation with reasoning (390 ms)
+    √ returns 404 for a non-existent task ID (521 ms)
+    √ returns 401 without a token (50 ms)
+
+ FAIL  src/tests/auth.test.ts (15.701 s)
+  POST /api/auth/register
+    √ creates a user and returns 201 with both tokens (2535 ms)
+    √ returns 409 when email is already registered (1480 ms)
+    × returns 500 when required fields are missing (61 ms)
+  POST /api/auth/login
+    √ logs in with correct credentials and returns 200 with tokens (1132 ms)
+    √ returns 401 for wrong password (773 ms)
+    √ returns 401 for non-existent email (246 ms)
+  POST /api/auth/refresh
+    √ returns a new token pair with a valid refresh token (658 ms)
+    × returns 401 when no refresh token is provided (63 ms)
+    √ returns 401 when refresh token is invalid (76 ms)
+  POST /api/auth/logout
+    √ logs out successfully and revokes the refresh token (608 ms)
+    √ cannot use the revoked refresh token after logout (308 ms)
+    √ returns 401 when called without an access token (60 ms)
+    √ returns 400 when no refresh token is provided in body (221 ms)
+
+  ● POST /api/auth/register › returns 500 when required fields are missing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 500
+    Received: 400
+
+      43 |       .send({ email: "missing@test.com" }); // no name or password
+      44 |
+    > 45 |     expect(res.status).toBe(500);
+         |                        ^
+      46 |   });
+      47 | });
+      48 |
+
+      at Object.<anonymous> (src/tests/auth.test.ts:45:24)
+
+  ● POST /api/auth/refresh › returns 401 when no refresh token is provided
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 401
+    Received: 400
+
+      112 |   it("returns 401 when no refresh token is provided", async () => {
+      113 |     const res = await request(app).post("/api/auth/refresh").send({});
+    > 114 |     expect(res.status).toBe(401);
+          |                        ^
+      115 |   });
+      116 |
+      117 |   it("returns 401 when refresh token is invalid", async () => {
+
+      at Object.<anonymous> (src/tests/auth.test.ts:114:24)
+
+ FAIL  src/tests/projects.test.ts (13.603 s)
+  POST /api/workspaces/:wid/projects
+    √ creates a project and returns 201 (661 ms)
+    × returns 500 when title is missing (441 ms)
+    √ returns 401 without a token (72 ms)
+  GET /api/workspaces/:wid/projects
+    √ returns all projects in the workspace (916 ms)
+    √ returns 401 without a token (63 ms)
+  PATCH /api/projects/:id
+    √ updates the project title and returns 200 (554 ms)
+    √ updates the project status (588 ms)
+    √ returns 404 for a non-existent project ID (512 ms)
+    √ returns 401 without a token (70 ms)
+  DELETE /api/projects/:id
+    √ deletes the project and returns 204 (546 ms)
+    √ returns 401 without a token (71 ms)
+
+  ● POST /api/workspaces/:wid/projects › returns 500 when title is missing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 500
+    Received: 400
+
+      41 |       .send({ description: "No title" });
+      42 |
+    > 43 |     expect(res.status).toBe(500);
+         |                        ^
+      44 |   });
+      45 |
+      46 |   it("returns 401 without a token", async () => {
+
+      at Object.<anonymous> (src/tests/projects.test.ts:43:24)
+
+Test Suites: 4 failed, 1 passed, 5 total
+Tests:       8 failed, 68 passed, 76 total
+Snapshots:   0 total
+Time:        96.276 s
+Ran all test suites.

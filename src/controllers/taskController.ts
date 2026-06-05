@@ -4,6 +4,7 @@ import { generateEmbedding } from "../services/embeddingService";
 import Task from "../models/Task";
 import { NextFunction, Request, Response } from "express";
 import { logActivity } from "../services/activityService";
+import Project from "../models/Project";
 
 // Get all tasks in a project
 export const getTasks = async (
@@ -97,16 +98,19 @@ export const updateTask = async (
       return;
     }
 
-    // Log the creation to the activity trail
-    await logActivity({
-      workspace: req.body.workspace, // client must send workspaceId in the body
-      actor: req.user!._id,
-      entity: "task",
-      entityId: task._id.toString(),
-      action: "updated",
-    });
+    // updateTaskSchema strips `workspace`, so derive it from the project
+    // instead of trusting req.body.
+    const project = await Project.findById(task.project).select("workspace");
+    if (project) {
+      await logActivity({
+        workspace: project.workspace,
+        actor: req.user!._id,
+        entity: "task",
+        entityId: task._id.toString(),
+        action: "updated",
+      });
+    }
 
-    // Emit to everyone in the workspace room
     const io = req.app.locals.io;
     if (io) {
       io.to(task.project.toString()).emit("task:updated", task);
@@ -132,14 +136,16 @@ export const deleteTask = async (
       return;
     }
 
-    // Log the deletion before the task reference is gone
-    await logActivity({
-      workspace: req.body.workspace,
-      actor: req.user!._id,
-      entity: "task",
-      entityId: task._id.toString(),
-      action: "deleted",
-    });
+  const project = await Project.findById(task.project).select("workspace");
+    if (project) {
+      await logActivity({
+        workspace: project.workspace,
+        actor: req.user!._id,
+        entity: "task",
+        entityId: task._id.toString(),
+        action: "deleted",
+      });
+    }
 
     // Emit real-time event
     const io = req.app.locals.io;
