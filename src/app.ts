@@ -14,7 +14,7 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
-app.use(mongoSanitize());
+app.use(mongoSanitize({ replaceWith: "_" }));
 
 // Body parsing
 app.use(express.json()); // parse JSON request bodies
@@ -45,13 +45,16 @@ app.use("/api/search", searchRoutes);
 // Global error handler - catches anything pass to next(error)
 app.use(
   (
-    err: Error,
+    err: any,
     _req: express.Request,
     res: express.Response,
     _next: express.NextFunction,
   ) => {
     console.error(err.stack);
-    res.status(500).json({ message: err.message || "Internal server error" });
+    const status = err.statusCode || err.status || 500;
+    res
+      .status(status)
+      .json({ message: err.message || "Internal server error" });
   },
 );
 export default app;
