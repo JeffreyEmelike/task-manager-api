@@ -1,9 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import Task from "../models/Task";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 export const generateTags = async (taskId: string): Promise<string[]> => {
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const task = await Task.findById(taskId);
   if (!task) throw new Error("Task not found");
 

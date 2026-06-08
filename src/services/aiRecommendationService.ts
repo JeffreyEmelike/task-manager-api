@@ -1,8 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import Task from "../models/Task";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 interface Recommendation {
   suggestedPriority: "low" | "medium" | "high" | "critical";
   suggestedAssigneeId?: string;
@@ -12,6 +10,7 @@ interface Recommendation {
 export const recommendForTask = async (
   taskId: string,
 ): Promise<Recommendation> => {
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const task = await Task.findById(taskId).populate("project");
   if (!task) throw new Error("Task not found");
 
