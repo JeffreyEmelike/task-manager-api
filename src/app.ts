@@ -10,6 +10,8 @@ import taskRoutes from "./routes/tasks";
 import searchRoutes from "./routes/search";
 
 const app = express();
+// Tell Express to trust Railway's proxy
+app.set("trust proxy", 1);
 
 // Security middleware
 app.use(helmet());
